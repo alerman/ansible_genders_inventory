@@ -1,12 +1,12 @@
 FROM alerman/centos7-baseimage
 
 RUN yum install -y java-1.8.0-openjdk-devel make gcc-c++ wget git epel-release tigervnc-server net-tools
-#Hiave to skip broken here as something above (or centos) installs python 2.7, and some packages  in the group say they need pythin2.6
+#Have to skip broken here as something above (or centos) installs python 2.7, and some packages  in the group say they need pythin2.6
 RUN yum -y groupinstall "Server with GUI" --skip-broken
 RUN yum clean all && yum -y groupinstall "MATE Desktop"
 ADD ./cloudera-cdh5.repo /etc/yum.repos.d/cloudera-cdh5.repo
 ADD ./dependencies/apache-maven-3.5.3-bin.tar.gz /opt/maven
-ADD ./dependencies/ideaIC-2018.1.3.tar.gz /opt/idea
+ADD ./dependencies/ideaIC-2018.1.3-no-jdk.tar.gz /opt/idea
 ENV PATH="/opt/maven/apache-maven-3.5.3/bin:${PATH}"
 ENV M2_HOME="/opt/maven"
 ENV JAVA_HOME=""
@@ -17,7 +17,6 @@ RUN mkdir -p /var/lib/zookeeper && chown -R zookeeper /var/lib/zookeeper/
 RUN yum -y install hadoop hadoop-0.20-mapreduce hadoop-client
 RUN yum -y install hadoop-hdfs-namenode hadoop-hdfs-secondarynamenode hadoop-hdfs-datanode
 RUN yum -y install hadoop-yarn-resourcemanager hadoop-yarn-nodemanager hadoop-mapreduce-historyserver
-
 
 #Set up MATE
 RUN echo "mate-session" > ~/.Xclients
