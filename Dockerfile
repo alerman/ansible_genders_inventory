@@ -5,8 +5,8 @@ RUN yum -y groupinstall "Server with GUI" --skip-broken && yum -y clean all
 RUN yum -y groupinstall "MATE" && yum -y clean all
 RUN yum -y upgrade firefox git java && yum -y clean all
 ADD ./dependencies/apache-maven-3.5.4-bin.tar.gz /opt/maven
-ADD ./dependencies/ideaIC-2018.1.3-no-jdk.tar.gz /opt/idea
-RUN ln -s /opt/idea/idea-IC-181.4892.42 /opt/idea/current
+ADD ./dependencies/ideaIC-2019.2.tar.gz /opt/idea
+RUN ln -s /opt/idea/idea-IC-192.5728.98 /opt/idea/current
 RUN ln -s /opt/maven/apache-maven-3.5.4 /opt/maven/current
 ENV M2_HOME="/opt/maven/current/"
 ENV JAVA_HOME=""
