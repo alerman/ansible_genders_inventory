@@ -1,0 +1,6 @@
+---
+#csv_inventory.yaml
+
+plugin: genders_inventory            # Name of the plugin
+path_to_inventory: /etc # Directory location
+file: genders        # Name of the inventory file
