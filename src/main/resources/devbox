@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# ============================================== #
+# The CLI for devbox initialization/verification #
+# ============================================== #
+
+THIS_SCRIPT=$(readlink -f "$0")
+export ROOT_DIR="${THIS_SCRIPT%/*}"
+
+# Source all of the helper scripts
+# shellcheck disable=SC2086
+# shellcheck source=./util/*
+source ${ROOT_DIR}/util/*
+
+INIT="init"
+DOCTOR="doctor"
+MAN="man"
+HELP="help"
+
+function usage() {
+    echo "Usage: $0 (${INIT} <username> <uid> | ${DOCTOR} | ${MAN} | ${HELP})"
+    echo -e "\t${INIT} - Initialize the devbox container (shouldn't need to run this manually)"
+    echo -e "\t${DOCTOR} - Check that the devbox environment has all it needs for development"
+    echo -e "\t${MAN} - Open up the Devbox manual"
+    echo -e "\t${HELP} - Display this message"
+}
+
+if [[ $# -lt 1 ]]; then
+    error "Must specify operation to execute..."
+    usage
+    exit 1
+fi
+
+function run_init() {
+    "${ROOT_DIR}/init/init.sh" "$@"
+}
+
+function run_doctor() {
+    "${ROOT_DIR}/doctor/doctor.sh"
+}
+
+function run_man() {
+    "${ROOT_DIR}/man/man.sh" "$@"
+}
+
+case $1 in
+    ${INIT} )
+        if [[ $# -lt 3 ]]; then
+            error "Must specify username and uid for devbox initialization"
+            usage
+            exit 1
+        fi
+
+        shift
+        run_init "$@"
+        ;;
+    ${DOCTOR} )
+        run_doctor
+        ;;
+    ${MAN} )
+        shift
+        run_man "$@"
+        ;;
+    ${HELP} )
+        usage
+        ;;
+    * )
+        usage
+        ;;
+esac

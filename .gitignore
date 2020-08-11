@@ -1,2 +1,15 @@
+# IntelliJ files
 .idea
 *.iml
+target/
+
+# generated devbox tar file
+devbox.tar.gz
+
+# downloaded intellij tar
+idea.tar.gz
+
+# downloaded postman tar
+postman.tar.gz
+
+ssh_keys/

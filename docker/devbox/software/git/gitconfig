@@ -1,0 +1,9 @@
+[alias]
+        copr = "!f() { git fetch origin +refs/pull-requests/$1/merge:refs/remotes/origin/pr/$1; git checkout pr/$1; }; f"
+        delpr = "!f() { git branch -D pr/$1; git update-ref -d refs/remotes/origin/pr/$1; }; f"
+[push]
+        default = upstream
+[pull]
+        rebase = true
+[user]
+       name = changeme

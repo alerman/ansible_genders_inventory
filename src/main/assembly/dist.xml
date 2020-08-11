@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<assembly>
+    <id>${env}</id>
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <!-- Add all files that do not end in .sh with no execution permission -->
+        <fileSet>
+            <directory>${project.build.directory}/archive</directory>
+            <outputDirectory>devbox</outputDirectory>
+            <excludes>
+                <exclude>**/*.sh</exclude>
+            </excludes>
+            <fileMode>0640</fileMode>
+        </fileSet>
+        <!-- Finally add all files that end in .sh and with execution permission for owner -->
+        <fileSet>
+            <directory>${project.build.directory}/archive</directory>
+            <outputDirectory>devbox</outputDirectory>
+            <includes>
+                <include>**/*.sh</include>
+            </includes>
+            <fileMode>0740</fileMode>
+        </fileSet>
+    </fileSets>
+</assembly>
