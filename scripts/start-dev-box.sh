@@ -106,6 +106,7 @@ function start_devbox() {
             --privileged=true \
             --volumes-from "${DATA_CONTAINER_NAME}" \
             -v /tmp:/hostTmp:z \
+            -v /srv/logs:/srv/logs:z \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -v /etc/yum.repos.d:/etc/yum.repos.d:ro \
             --net host \

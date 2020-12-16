@@ -53,11 +53,11 @@ function configure_mounted_dirs() {
 
 function configure_compose_ssh() {
     info "Configuring the root ssh key for the compose cluster"
-    cp /tmp/ssh_keys/* "${USER_HOME}/.ssh"
+    su - "${USERNAME}" -c "cp /tmp/ssh_keys/* ${USER_HOME}/.ssh"
     chmod 600 "${USER_HOME}/.ssh/*_rsa"
     chmod 644 "${USER_HOME}/.ssh/*_rsa.pub"
 
-    ssh-add "${USER_HOME}/.ssh/compose_root_rsa"
+    su - "${USERNAME}" -c "ssh-add ${USER_HOME}/.ssh/compose_root_rsa"
 
     rm -rf /tmp/ssh_keys
 }
