@@ -52,7 +52,16 @@ RUN mv /usr/bin/vncserver /etc/vncserver && \
     ln -s /usr/bin/vncpasswd /etc/vncpasswd && \
     ln -s /usr/bin/vncconfig /etc/vncconfig && \
     ln -s /usr/bin/x0vncserver /etc/x0vncserver
-    
+
+# Install Maven
+ARG MAVEN_DIR="/opt/mvn"
+ARG MAVEN_INSTALL_NAME="apache-maven-3.6.3"
+RUN mkdir ${MAVEN_DIR} && \
+    tar zxf ${PACKAGE_DIR}/mvn/*.tar.gz -C ${MAVEN_DIR} && \
+    ln -snf ${MAVEN_DIR}/${MAVEN_INSTALL_NAME} ${MAVEN_DIR}/current && \
+    chown -R root:users ${MAVEN_DIR} && \
+    chmod -R 755 ${MAVEN_DIR}
+
 # Install IntelliJ
 ARG IDEA_DIR="/opt/idea"
 ARG IDEA_INSTALL_NAME="idea-IC-202.6397.94"

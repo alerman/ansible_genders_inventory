@@ -1,19 +1,13 @@
-export PATH=$PATH:$HOME/bin:$IDEA_HOME/bin:$JAVA_HOME/bin:/opt/devbox
-# Run mvn in docker container to support easy versioning
-export MVN_VERSION="maven:3.5.4-jdk-8"
-export MAVEN_OPTS="-Xmx10240m"
-MAVEN_REPO_VOLUME=${USER}_maven_repo
-function mvn() {
-    docker run -it --rm --name maven_runner \
-           -v "${MAVEN_REPO_VOLUME}:/root/.m2" \
-           -v "$(pwd):/usr/src/mymaven:z" \
-           -w /usr/src/mymaven ${MVN_VERSION} \
-           mvn "${MAVEN_OPTS}" "$@"
-}
-
 # User specific environment and startup programs
 export IDEA_HOME=/opt/idea/current
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk/
+export M2_HOME=/opt/mvn/current
+
+export PATH=$PATH:$HOME/bin:$M2_HOME/bin:$IDEA_HOME/bin:$JAVA_HOME/bin:/opt/devbox
+
+export MAVEN_OPTS="-Xmx10240m"
+
+
 
 # Path to your oh-my-zsh installation.
 export ZSH="/home/awlerma/.oh-my-zsh"

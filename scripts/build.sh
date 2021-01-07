@@ -7,6 +7,7 @@ DEVBOX_DIR=$(realpath "${THIS_DIR}/..")
 source ${THIS_DIR}/../src/main/resources/util/logging.sh
 
 IDEA_URL="https://download.jetbrains.com/idea/ideaIC-2020.2.tar.gz"
+MAVEN_URL="https://apache.claz.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz"
 POSTMAN_URL="https://dl.pstmn.io/download/latest/linux64"
 
 COMPOSE_BASE_IMAGE_REP0="https://raw.githubusercontent.com/ejrgilbert/compose-base-image/master"
@@ -98,7 +99,8 @@ function build_devbox() {
     local software_dir="${THIS_DIR}/../docker/devbox/software"
 
     # Download the IntelliJ and Postman tars (too large for git's max file size)
-    download_tar "${IDEA_URL}" "${software_dir}/idea/idea.tar.gz"
+    download_tar "${IDEA_URL}" "${software_dir}/idea/idea.tar.gz" 
+    download_tar "${MAVEN_URL}" "${software_dir}/mvn/mvn.tar.gz"
     download_tar "${POSTMAN_URL}" "${software_dir}/postman/postman.tar.gz"
     # Download the 'compose-base-image' root key
     download_blob "${PRIV_KEY_URL}" "${software_dir}/ssh_keys/compose_root_rsa"

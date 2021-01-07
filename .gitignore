@@ -9,6 +9,9 @@ devbox.tar.gz
 # downloaded intellij tar
 idea.tar.gz
 
+# downloaded maven tar
+mvn.tar.gz
+
 # downloaded postman tar
 postman.tar.gz
 
