@@ -4,7 +4,8 @@
 # This script gets run on the devbox HOST machine #
 # to create, update, and/or start the devbox.     #
 # =============================================== #
-source ../src/main/resources/util/logging.sh
+THIS_DIR=$(dirname "$(realpath $0)")
+source ${THIS_DIR}/../src/main/resources/util/logging.sh
 
 USERNAME=$(id -u -n)
 USER_ID=$(id -u)
@@ -113,6 +114,7 @@ function start_devbox() {
             --shm-size=1gb \
             "devbox:${DEV_BOX_VERSION}"
         check_success $? "Failed to startup devbox:${DEV_BOX_VERSION} as ${DEV_BOX_NAME}..."
+        update_docker_gid
         docker exec "${DEV_BOX_NAME}" /opt/devbox/devbox init "${USERNAME}" "${USER_ID}"
         check_success $? "Failed to initialize devbox running as ${DEV_BOX_NAME}..."
 
@@ -138,6 +140,6 @@ setup_user_dirs
 setup_user_data_container
 setup_maven_container
 start_devbox
-update_docker_gid
+
 
 success "Started devbox:${DEV_BOX_VERSION} as ${DEV_BOX_NAME}"

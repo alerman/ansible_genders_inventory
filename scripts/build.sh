@@ -154,6 +154,15 @@ function run_all() {
     run_devbox
 }
 
+function trim() {
+    local var="$*"
+    # remove leading whitespace characters
+    var="${var#"${var%%[![:space:]]*}"}"
+    # remove trailing whitespace characters
+    var="${var%"${var##*[![:space:]]}"}"   
+    printf '%s' "$var"
+}
+
 if [[ $* =~ ${HELP} ]]; then
     usage
 fi
@@ -175,21 +184,27 @@ while (( "$#" )); do
             ;;
         -p|--push )
             PUSH="true"
+            shift
             ;;
+        -- )
+          shift 1
+          ;;
+        -*|--*) # unsupported flags
+            echo "uh oh"
+            error_exit "Unsupported flag $1"
+            ;;
+
         -? )
             usage
             ;;
-        -*|--*=) # unsupported flags
-            error_exit "Unsupported flag $1"
-            ;;
         *) # preserve positional arguments
-            PARAMS="$PARAMS $1"
+            PARAMS="$PARAMS ${1}"
             shift
             ;;
     esac
 done
-
 # set positional arguments in their proper place
+PARAMS=`echo $PARAMS | xargs`
 eval set -- "$PARAMS"
 
 if [[ ${#PARAMS[@]} -ne 1 ]]; then

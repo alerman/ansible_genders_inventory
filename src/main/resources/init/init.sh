@@ -37,7 +37,7 @@ function rename_user() {
         usermod -l "${USERNAME}" "${TEMP_USER}" || return $?
         usermod -u "${USER_ID}" "${USERNAME}" || return $?
         usermod -d "${USER_HOME}" "${USERNAME}"
-        rm -rf "/home/${TEMP_USER:?}" # `:?` causes the command to fail if TEMP_USER is empty
+       # mv "/home/${TEMP_USER:?}/*" "${USER_HOME}/" # `:?` causes the command to fail if TEMP_USER is empty
     fi
 }
 
@@ -98,6 +98,18 @@ function configure_idea() {
     cp "${_idea_desktop_src}" "${USER_HOME}/Desktop" || return $?
 }
 
+function configure_zsh() {
+    info "Downloading Oh My Zsh"
+    su $USERNAME sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
+    info "Configuring zsh"
+    local _zshrc_src="${PACKAGE_DIR}/zshrc.sh"
+    local _zshrc_dst="${USER_HOME}/.zshrc"
+
+    backup_cp "${_zshrc_src}" "${_zshrc_dst}" || return $?
+
+}
+
 rename_user || error_exit "Failed to rename preconfigured user"
 configure_mounted_dirs || error_exit "Failed to configure mounted directories"
 configure_compose_ssh || error_exit "Failed to configure ssh for compose cluster"
@@ -105,7 +117,7 @@ configure_git || error_exit "Failed to configure git"
 configure_bash || error_exit "Failed to configure bash"
 configure_firefox || error_exit "Failed to configure firefox"
 configure_idea || error_exit "Failed to configure IntelliJ"
-
+configure_zsh || error_exit "Failed to configure zsh"
 # Fix permissions in user's home directory
 chown -R "${USERNAME}:${USER_GROUP}" "${USER_HOME}" || error_exit "Failed to fix permissions"
 success "Successfully initialized the devbox..."
