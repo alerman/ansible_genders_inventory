@@ -39,6 +39,8 @@ function rename_user() {
         usermod -d "${USER_HOME}" "${USERNAME}"
        # mv "/home/${TEMP_USER:?}/*" "${USER_HOME}/" # `:?` causes the command to fail if TEMP_USER is empty
     fi
+
+    chown ${USERNAME}:developers ${USER_HOME}
 }
 
 function configure_mounted_dirs() {
@@ -53,9 +55,11 @@ function configure_mounted_dirs() {
 
 function configure_compose_ssh() {
     info "Configuring the root ssh key for the compose cluster"
+    su - "${USERNAME}" -c "mkdir ${USER_HOME}/.ssh"
+    su - "${USERNAME}" -c "chmod 755 ${USER_HOME}/.ssh"
     su - "${USERNAME}" -c "cp /tmp/ssh_keys/* ${USER_HOME}/.ssh"
-    chmod 600 "${USER_HOME}/.ssh/*_rsa"
-    chmod 644 "${USER_HOME}/.ssh/*_rsa.pub"
+    chmod 600 ${USER_HOME}/.ssh/*_rsa
+    chmod 644 ${USER_HOME}/.ssh/*_rsa.pub
 
     su - "${USERNAME}" -c "ssh-add ${USER_HOME}/.ssh/compose_root_rsa"
 

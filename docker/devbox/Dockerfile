@@ -6,7 +6,7 @@ RUN yum -y clean all && \
     yum -y clean all
     
 #Breaking up since the groupinstalls take forever and dont change often.
-RUN yum -y install tigervnc-server firefox zsh && \
+RUN yum -y install tigervnc-server firefox zsh rpm-build && \
     echo "mate-session" >~/.Xclients && \
     chmod +x ~/.Xclients && \
     pip3 install grip && \
@@ -64,9 +64,9 @@ RUN mkdir ${MAVEN_DIR} && \
 
 # Install IntelliJ
 ARG IDEA_DIR="/opt/idea"
-ARG IDEA_INSTALL_NAME="idea-IC-202.6397.94"
+ARG IDEA_INSTALL_NAME="idea-IC-203.6682.168"
 RUN mkdir ${IDEA_DIR} && \
-    tar zxf ${PACKAGE_DIR}/idea/*.tar.gz -C ${IDEA_DIR} && \
+    tar zxf ${PACKAGE_DIR}/idea/*.tar.gz -C ${IDEA_DIR} && ls -la /opt/idea && \
     ln -snf ${IDEA_DIR}/${IDEA_INSTALL_NAME} ${IDEA_DIR}/current && \
     find ${PACKAGE_DIR}/idea/plugins -name "*.zip" -exec unzip -o {} -d ${IDEA_DIR}/current/plugins \; && \
     chown -R root:users ${IDEA_DIR} && \
@@ -81,7 +81,7 @@ RUN mkdir ${POSTMAN_DIR} && \
     chmod -R 755 ${POSTMAN_DIR}
 
 # Add compose root ssh key
-RUN cp ${PACKAGE_DIR}/ssh_keys/* /tmp
+RUN mv ${PACKAGE_DIR}/ssh_keys /tmp/ssh_keys
 
 # ================================================================= #
 # Simple smoke testing:

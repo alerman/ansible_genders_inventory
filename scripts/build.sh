@@ -6,7 +6,7 @@ DEVBOX_DIR=$(realpath "${THIS_DIR}/..")
 # NOTE: REGISTRY_URL is used to specify where to push the built images...must have trailing '/'
 source ${THIS_DIR}/../src/main/resources/util/logging.sh
 
-IDEA_URL="https://download.jetbrains.com/idea/ideaIC-2020.2.tar.gz"
+IDEA_URL="https://download.jetbrains.com/idea/ideaIC-2020.3.1.tar.gz"
 MAVEN_URL="https://apache.claz.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz"
 POSTMAN_URL="https://dl.pstmn.io/download/latest/linux64"
 
