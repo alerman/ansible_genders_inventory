@@ -51,6 +51,11 @@ registry after they have been built.
 ```bash
 ./scripts/build.sh -v <ver1> -v <ver2> <ver3> ... -p -- all
 ```
+## Access the Devbox ##
+The Devbox is now using zsh as its base shell. Access it with a docker exec.
+```
+docker exec -it -u $USER ${USER}_dev_box zsh
+```
 
 ## Access the Devbox Manual ##
 The Devbox comes shipped with a manual to enable developers to read various
