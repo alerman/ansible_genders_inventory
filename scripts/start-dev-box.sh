@@ -130,6 +130,8 @@ function start_devbox() {
 
 function update_docker_gid() {
     DOCKER_ID=$(getent group docker | awk -F':' '{ print $3 }')
+    EXISTING_GROUP=$(docker exec "${DEV_BOX_NAME}" getent group $DOCKER_ID | cut -d: -f1)
+    [ -n "$EXISTING_GROUP" ] && docker exec "${DEV_BOX_NAME}" groupmod -g 3000 ${EXISTING_GROUP} && find / -group $DOCKER_ID -exec chgrp -h input {} \;
     info "Changing docker GID to ${DOCKER_ID}..."
     docker exec "${DEV_BOX_NAME}" groupmod -g "${DOCKER_ID}" docker
 
