@@ -100,9 +100,12 @@ function build_devbox() {
 
     # Download the IntelliJ and Postman tars (too large for git's max file size)
     download_tar "${IDEA_URL}" "${software_dir}/idea/idea.tar.gz" 
+    mkdir "${software_dir}/mvn/"
     download_tar "${MAVEN_URL}" "${software_dir}/mvn/mvn.tar.gz"
+    mkdir "${software_dir}/postman/"
     download_tar "${POSTMAN_URL}" "${software_dir}/postman/postman.tar.gz"
     # Download the 'compose-base-image' root key
+    mkdir "${software_dir}/ssh_keys/"
     download_blob "${PRIV_KEY_URL}" "${software_dir}/ssh_keys/compose_root_rsa"
     download_blob "${PUB_KEY_URL}" "${software_dir}/ssh_keys/compose_root_rsa.pub"
 
