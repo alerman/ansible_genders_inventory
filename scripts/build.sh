@@ -13,6 +13,7 @@ POSTMAN_URL="https://dl.pstmn.io/download/latest/linux64"
 COMPOSE_BASE_IMAGE_REP0="https://raw.githubusercontent.com/ejrgilbert/compose-base-image/master"
 PRIV_KEY_URL="${COMPOSE_BASE_IMAGE_REP0}/base/resources/sshd/root_key/compose_root_rsa"
 PUB_KEY_URL="${COMPOSE_BASE_IMAGE_REP0}/base/resources/sshd/root_key/compose_root_rsa.pub"
+CONTAINERYARD="containeryard.evoforge.org/warehouses/"
 
 MAVEN="maven"
 VANILLA="vanilla"
@@ -32,6 +33,7 @@ function usage() {
     echo "Options:"
     echo -e "\t-v - What versions to tag the images as"
     echo -e "\t-p - Pass this option if you want to push to the REGISTRY...MUST HAVE -v IF USING THIS OPTION"
+    echo -e "\t-d - Pass this option to pull the latest image from the REGISTRY and skip building, passing without -v will default to latest"
     note "Make sure you  pass the '--' if you use any of the above options (-v parsing causes this)"
     exit 1
 }
@@ -141,6 +143,17 @@ function push_image() {
     success "Completed pushing docker images"
 }
 
+function pull_image() {
+    if [[ "${PULL}" != "true" ]]; then
+        return
+    fi
+    info "Pulling ${_type} docker images"
+    for v in "${DEV_BOX_VERSIONS[@]}"; do
+        docker pull "${CONTAINERYARD}${_type}:$v" || error_exit "Failed to pull ${CONTAINERYARD}${_type}:$v"
+    done
+
+}
+
 function run_vanilla() {
     build_vanilla
     tag_image "${VANILLA}"
@@ -189,6 +202,10 @@ while (( "$#" )); do
             ;;
         -p|--push )
             PUSH="true"
+            shift
+            ;;
+        -d|--download )
+            PULL="true"
             shift
             ;;
         -- )
