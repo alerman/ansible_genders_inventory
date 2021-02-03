@@ -24,7 +24,7 @@ HELP="help"
 header "Docker Build Utility"
 
 function usage() {
-    echo "Usage: $0 [-v ver1 ver2 ...] [-p] -- (${ALL} | ${MAVEN} | ${VANILLA} | ${DEVBOX})"
+    echo "Usage: $0 [-v ver1 ver2 ...] [-p] [-d] -- (${ALL} | ${MAVEN} | ${VANILLA} | ${DEVBOX})"
     echo -e "\t${ALL} - if you would like to build the entire project"
     echo -e "\t${MAVEN} - if you would like to build the maven portion of the project"
     echo -e "\t${VANILLA} - if you would like to build the ${VANILLA} docker image"
@@ -33,7 +33,7 @@ function usage() {
     echo "Options:"
     echo -e "\t-v - What versions to tag the images as"
     echo -e "\t-p - Pass this option if you want to push to the REGISTRY...MUST HAVE -v IF USING THIS OPTION"
-    echo -e "\t-d - Pass this option to pull the latest image from the REGISTRY and skip building, passing without -v will default to latest"
+    echo -e "\t-d - Pass this option to pull an image from the REGISTRY and skip building, passing without -v will default to latest"
     note "Make sure you  pass the '--' if you use any of the above options (-v parsing causes this)"
     exit 1
 }
@@ -144,23 +144,28 @@ function push_image() {
 }
 
 function pull_image() {
+    local _type=$1
     if [[ "${PULL}" != "true" ]]; then
         return
     fi
+
     info "Pulling ${_type} docker images"
     for v in "${DEV_BOX_VERSIONS[@]}"; do
         docker pull "${CONTAINERYARD}${_type}:$v" || error_exit "Failed to pull ${CONTAINERYARD}${_type}:$v"
     done
-
+    success "Completed pull docker images"
+    exit 0
 }
 
 function run_vanilla() {
+    pull_image "${VANILLA}"
     build_vanilla
     tag_image "${VANILLA}"
     push_image "${VANILLA}"
 }
 
 function run_devbox() {
+    pull_image "${DEVBOX}"
     build_devbox
     tag_image "${DEVBOX}"
     push_image "${DEVBOX}"
@@ -216,7 +221,7 @@ while (( "$#" )); do
             error_exit "Unsupported flag $1"
             ;;
 
-        -? )
+        -?|--help)
             usage
             ;;
         *) # preserve positional arguments
@@ -230,12 +235,22 @@ PARAMS=`echo $PARAMS | xargs`
 eval set -- "$PARAMS"
 
 if [[ ${#PARAMS[@]} -ne 1 ]]; then
-    error "Expecting one positional argument specifying which image(s) to build"
+    error "Expecting one positional argument specifying which image(s) to build or pull"
     usage
 fi
 
 if [[ "${PUSH}" == "true" && -z ${DEV_BOX_VERSIONS[*]} ]]; then
     error "The push (-p) option must be paired with tag versions (-v)"
+    usage
+fi
+
+if [[ "${PULL}" == "true" && -z ${DEV_BOX_VERSIONS[*]} ]]; then
+    info "No version specified, defaulting to latest"
+    DEV_BOX_VERSIONS+="latest"
+fi
+
+if [[ "${PULL}" == "true" && ! ${PARAMS[0]} =~ ^(devbox|vanilla)$ ]]; then
+    error "The pull option can only be used with 'devbox' or 'vanilla'"
     usage
 fi
 
